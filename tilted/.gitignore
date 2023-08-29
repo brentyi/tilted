@@ -1,0 +1,12 @@
+outputs_*/
+
+*.swp
+*.swo
+*.pyc
+*.egg-info
+__pycache__
+.coverage
+htmlcov
+.mypy_cache
+.dmypy.json
+.hypothesis

@@ -1,0 +1,84 @@
+# dcargs YAML.
+!dataclass:NerfConfig
+dataset_path: !!python/object/apply:pathlib.PosixPath
+- data
+- nerf_synthetic
+- ship
+dataset_type: blender
+debug_render_interval: null
+eval_final_samples: 48
+eval_proposal_samples: &id001 !!python/tuple
+- 256
+- 128
+field: !dataclass:FieldConfig
+  density_decoder: !dataclass:ShallowDensityDecoder
+    density_activation: trunc_exp
+    name: null
+    parent: null
+  grid_type: kplane
+  primary_channels: 64
+  primary_decoder: !dataclass:NerfDecoderMlp
+    camera_embed_dim: 0
+    color_layers: 2
+    color_units: 128
+    density_activation: trunc_exp
+    feature_n_freqs: 0
+    name: null
+    parent: null
+    viewdir_n_freqs: 0
+    viewdir_sph_harm_levels: 4
+  primary_resolutions: !!python/tuple
+  - 64
+  - 128
+  - 256
+  - 512
+  proposal_channels: !!python/tuple
+  - 8
+  - 8
+  proposal_resolutions: !!python/tuple
+  - 64
+  - 128
+grid_bound: 1.6
+optim: !dataclass:OptimizationConfig
+  camera_delta_lr: 0.0
+  camera_delta_steps: 5000
+  decoder_lr: 0.01
+  distortion_loss_coeff: 0.001
+  factor_lr: 0.01
+  half_resolution_steps: 0
+  interlevel_loss_coeff: 1.0
+  l12_reg_coeff: 0.001
+  low_pass_steps: 512
+  minibatch_size: 4096
+  projection_decay_start: 500
+  projection_decay_steps: 4500
+  projection_lr: 0.0
+  proposal_anneal_iters: 1000
+  proposal_anneal_slope: 10.0
+  total_steps: 30000
+  tv_reg_l1_coeff: 0.0
+  tv_reg_l2_coeff: 0.01
+  warmup_steps: 512
+primary_transform_count: 8
+proposal_transform_count: null
+render_config: !dataclass:RenderConfig
+  background: white
+  far: 6.0
+  final_samples: 48
+  global_rotate_seed: null
+  gradient_scaling: false
+  histogram_padding: 0.01
+  initial_samples: linear
+  near: 2.0
+  proposal_samples: *id001
+  sample_aabb_max: !!python/tuple
+  - 1.0
+  - 1.0
+  - 1.0
+  sample_aabb_min: !!python/tuple
+  - -1.0
+  - -1.0
+  - -1.0
+seed: 2
+tau_init: random
+unbounded_contraction_norm: inf
