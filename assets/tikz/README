@@ -1,0 +1,9 @@
+Compiling figure sources on MacOS (MacTex 2023):
+
+1. Convert to .dvi:
+   
+   latex <source_file>.tex
+
+2. Run dvisvgm with options:
+
+   dvisvgm -e --no-fonts <source_file>.dvi
