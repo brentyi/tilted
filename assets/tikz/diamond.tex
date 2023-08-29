@@ -1,0 +1,89 @@
+\documentclass[border=0in]{standalone}
+
+\usepackage[T1]{fontenc}
+\usepackage{opensans}
+\usepackage{bm}
+\usepackage{mathrsfs}
+
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{newtxsf}
+
+\usepgfplotslibrary{fillbetween}
+
+\definecolor{c0}{HTML}{f0f9e8}
+\definecolor{c1}{HTML}{bae4bc}
+\definecolor{c2}{HTML}{7bccc4}
+\definecolor{c3}{HTML}{43a2ca}
+\definecolor{c4}{HTML}{0868ac}
+\definecolor{lightgray}{HTML}{d3d3d3}
+\newcommand{\grtr}{\natural}
+
+
+\setcounter{MaxMatrixCols}{20}
+
+
+\begin{document}
+
+\begin{tikzpicture}
+
+  % bounding box
+  \draw[black, fill=white, line width=1pt] (-2.2,-2.2) rectangle (2.2,2.2); % Adjust the dimensions as needed
+  
+  % Black Square
+  \fill[black, rotate=45] (-1.2,-1.2) rectangle (1.2,1.2); % Adjust the coordinates to position the square
+
+  % first approx sign
+  \node [anchor=center] at (2.97, 0) {{\Huge $\approx$ }};
+
+
+  % discretized matrix
+\node [anchor=center] at (6.25, 0) {
+    \Large
+    $\begin{bmatrix}
+      \textcolor{lightgray}{0} &\hspace{-0.45em}& \textcolor{lightgray}{0} &\hspace{-0.45em}& \textcolor{lightgray}{0} &\hspace{-0.45em}& \textcolor{lightgray}{0} &\hspace{-0.45em}& \textcolor{lightgray}{0} &\hspace{-0.45em}& \textcolor{lightgray}{0} &\hspace{-0.45em}& \textcolor{lightgray}{0} \\
+      \textcolor{lightgray}{0} &\hspace{-0.45em}& \textcolor{lightgray}{0} &\hspace{-0.45em}& \textcolor{lightgray}{0} &\hspace{-0.45em}& \textcolor{black}{1} &\hspace{-0.45em}& \textcolor{lightgray}{0} &\hspace{-0.45em}& \textcolor{lightgray}{0} &\hspace{-0.45em}& \textcolor{lightgray}{0} \\
+      \textcolor{lightgray}{0} &\hspace{-0.45em}& \textcolor{lightgray}{0} &\hspace{-0.45em}& \textcolor{black}{1} &\hspace{-0.45em}& \textcolor{black}{1} &\hspace{-0.45em}& \textcolor{black}{1} &\hspace{-0.45em}& \textcolor{lightgray}{0} &\hspace{-0.45em}& \textcolor{lightgray}{0} \\
+      \textcolor{lightgray}{0} &\hspace{-0.45em}& \textcolor{black}{1} &\hspace{-0.45em}& \textcolor{black}{1} &\hspace{-0.45em}&
+      \textcolor{black}{1} &\hspace{-0.45em}& \textcolor{black}{1} &\hspace{-0.45em}& \textcolor{black}{1} &\hspace{-0.45em}&
+      \textcolor{lightgray}{0} \\
+      \textcolor{lightgray}{0} &\hspace{-0.45em}& \textcolor{lightgray}{0} &\hspace{-0.45em}& \textcolor{black}{1} &\hspace{-0.45em}& \textcolor{black}{1} &\hspace{-0.45em}& \textcolor{black}{1} &\hspace{-0.45em}& \textcolor{lightgray}{0} &\hspace{-0.45em}& \textcolor{lightgray}{0} \\
+      \textcolor{lightgray}{0} &\hspace{-0.45em}& \textcolor{lightgray}{0} &\hspace{-0.45em}& \textcolor{lightgray}{0} &\hspace{-0.45em}& \textcolor{black}{1} &\hspace{-0.45em}& \textcolor{lightgray}{0} &\hspace{-0.45em}& \textcolor{lightgray}{0} &\hspace{-0.45em}& \textcolor{lightgray}{0} \\
+      \textcolor{lightgray}{0} &\hspace{-0.45em}& \textcolor{lightgray}{0} &\hspace{-0.45em}& \textcolor{lightgray}{0} &\hspace{-0.45em}& \textcolor{lightgray}{0} &\hspace{-0.45em}& \textcolor{lightgray}{0} &\hspace{-0.45em}& \textcolor{lightgray}{0} &\hspace{-0.45em}& \textcolor{lightgray}{0} \\
+    \end{bmatrix}$};
+
+  % second approx sign
+  \node [anchor=center] at (9.5, 0) {{\Huge $\approx$ }};
+
+
+  % discretized matrix 2
+  \node [anchor=center] at (12.75, 0) {
+    \large
+    $\begin{bmatrix}
+      \textcolor{lightgray}{0} & \textcolor{lightgray}{0} & \textcolor{lightgray}{0} & \textcolor{lightgray}{0} & \textcolor{lightgray}{0} & \textcolor{lightgray}{0} & \textcolor{lightgray}{0} & \textcolor{lightgray}{0} & \textcolor{lightgray}{0} \\
+      \textcolor{lightgray}{0} & \textcolor{lightgray}{0} & \textcolor{lightgray}{0} & \textcolor{lightgray}{0} & \textcolor{black}{1} & \textcolor{lightgray}{0} & \textcolor{lightgray}{0} & \textcolor{lightgray}{0} & \textcolor{lightgray}{0} \\
+      \textcolor{lightgray}{0} & \textcolor{lightgray}{0} & \textcolor{lightgray}{0} & \textcolor{black}{1} & \textcolor{black}{1} & \textcolor{black}{1} & \textcolor{lightgray}{0} & \textcolor{lightgray}{0} & \textcolor{lightgray}{0} \\
+      \textcolor{lightgray}{0} & \textcolor{lightgray}{0} & \textcolor{black}{1} & \textcolor{black}{1} & \textcolor{black}{1} & \textcolor{black}{1} & \textcolor{black}{1} & \textcolor{lightgray}{0} & \textcolor{lightgray}{0} \\
+      \textcolor{lightgray}{0} & \textcolor{black}{1} & \textcolor{black}{1} & \textcolor{black}{1} & \textcolor{black}{1} & \textcolor{black}{1} & \textcolor{black}{1} & \textcolor{black}{1} & \textcolor{lightgray}{0} \\
+      \textcolor{lightgray}{0} & \textcolor{lightgray}{0} & \textcolor{black}{1} & \textcolor{black}{1} & \textcolor{black}{1} & \textcolor{black}{1} & \textcolor{black}{1} & \textcolor{lightgray}{0} & \textcolor{lightgray}{0} \\
+      \textcolor{lightgray}{0} & \textcolor{lightgray}{0} &
+      \textcolor{lightgray}{0} & \textcolor{black}{1} & \textcolor{black}{1} &
+      \textcolor{black}{1} & \textcolor{lightgray}{0} & \textcolor{lightgray}{0} & \textcolor{lightgray}{0} \\
+      \textcolor{lightgray}{0} & \textcolor{lightgray}{0} &
+      \textcolor{lightgray}{0} & \textcolor{lightgray}{0} & \textcolor{black}{1} &
+      \textcolor{lightgray}{0} & \textcolor{lightgray}{0} & \textcolor{lightgray}{0} & \textcolor{lightgray}{0} \\
+      \textcolor{lightgray}{0} & \textcolor{lightgray}{0} &
+      \textcolor{lightgray}{0} & \textcolor{lightgray}{0} &
+      \textcolor{lightgray}{0} & \textcolor{lightgray}{0} & \textcolor{lightgray}{0} & \textcolor{lightgray}{0} & \textcolor{lightgray}{0} \\
+    \end{bmatrix}$};
+  % \node [anchor=center] at (6, 0) {$abcd$};
+
+
+\end{tikzpicture}
+
+\end{document}
