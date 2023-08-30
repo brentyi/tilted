@@ -57,7 +57,7 @@ This repository has been tested with Python 3.8, `jax==0.4.9`, and
 `jaxlib==0.4.9+cuda11.cudnn86`. We recommend first installing JAX via their
 official instructions: https://github.com/google/jax#installation
 
-We've packaged dependencies into a `requirements.txt` file
+We've packaged dependencies into a `requirements.txt` file:
 
 ```
 pip install -r requirements.txt
