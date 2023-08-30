@@ -1,6 +1,6 @@
 # TILTED
 
-**[Project page](https://brentyi.github.io/tilted/) &bull; arXiv (soon)**
+**[Project page](https://brentyi.github.io/tilted/) &bull; [arXiv](https://arxiv.org/abs/2308.15461)**
 
 Code release for our ICCV 2023 paper:
 
