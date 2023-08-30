@@ -124,7 +124,7 @@ Foundation-NSF DMS grant 2031899, and a research grant from TBSI.
 
 If any of it is useful, you can also cite:
 
-```
+```bibtex
 @inproceedings{tilted2023,
     author = {Yi, Brent and Zeng, Weijia and Buchanan, Sam and Ma, Yi},
     title = {Canonical Factors for Hybrid Neural Fields},
