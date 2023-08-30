@@ -26,9 +26,9 @@ This repository is structured as follows:
 ├── tilted
 │   ├── core                - Code shared between experiments. Factored grid
 │   │                         and neural decoder implementations.
-│   ├── rgb2d               - Neural radiance field rendering, training, and
+│   ├── nerf                - Neural radiance field rendering, training, and
 │   │                         dataloading utilities.
-│   ├── nerf                - 2D image reconstruction data and training
+│   ├── rgb2d               - 2D image reconstruction data and training
 │   │                         utilities.
 │   └── sdf                 - Signed distance field dataloading, training, and
 │                             meshing infrastructure.
