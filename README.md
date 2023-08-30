@@ -106,7 +106,7 @@ python visualize_nerf.py --help
 
 This supports RGB, PCA, and feature norm visualization:
 
-https://github.com/brentyi/tilted/assets/6992947/d7c9dc93-e439-4879-96d0-6b41fed5c88d
+https://github.com/brentyi/tilted/assets/6992947/f8fd1dff-0a78-4f91-9973-bbfb98c3af0c
 
 The core viewer infrastructure has been moved into
 [nerfstudio-project/viser](https://github.com/nerfstudio-project/viser), which
