@@ -61,7 +61,7 @@ button {
 #tilted-method-narrow {
   display: none;
 }
-#tilted-method-verynarrow {
+#tilted-method-very-narrow {
   display: none;
 }
 
@@ -78,7 +78,7 @@ button {
   #tilted-method-narrow {
     display: none;
   }
-  #tilted-method-verynarrow {
+  #tilted-method-very-narrow {
     display: block;
   }
 }
