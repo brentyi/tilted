@@ -5,10 +5,7 @@
     <meta charset="utf-8" />
     <title>Canonical Factors for Hybrid Neural Fields</title>
 
-    <meta
-      content=""
-      name="description"
-    />
+    <meta content="" name="description" />
     <meta
       content="Canonical Factors for Hybrid Neural Fields"
       property="og:title"
@@ -18,7 +15,7 @@
       property="og:description"
     />
     <meta
-      content=" ./assets/TILTED_method_narrow.svg"
+      content="https://brentyi.github.io/assets/method_preview.png"
       property="og:image"
     />
     <meta
@@ -30,26 +27,17 @@
       property="twitter:description"
     />
     <meta
-      content=" ./assets/TILTED_method_narrow.svg"
+      content="https://brentyi.github.io/assets/method_preview.png"
       property="twitter:image"
     />
-    <meta
-      property="og:type"
-      content="website"
-    />
-    <meta
-      content="summary_large_image"
-      name="twitter:card"
-    />
+    <meta property="og:type" content="website" />
+    <meta content="summary_large_image" name="twitter:card" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, minimum-scale=1"
     />
 
-    <link
-      href="https://fonts.googleapis.com"
-      rel="preconnect"
-    />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link
       href="https://fonts.gstatic.com"
       rel="preconnect"
@@ -64,14 +52,6 @@
         google: {
           families: [
             "Lato:100,100italic,300,300italic,400,400italic,700,700italic,900,900italic",
-            // "Montserrat:100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic",
-            // "Ubuntu:300,300italic,400,400italic,500,500italic,700,700italic",
-            // "Open Sans:300,300italic,400,400italic,600,600italic,700,700italic,800,800italic",
-            // "Changa One:400,400italic",
-            // "Varela Round:400",
-            // "Bungee Shade:regular",
-            // "Roboto:300,regular,500",
-            // "Bungee Outline:regular",
           ],
         },
       });
@@ -90,15 +70,8 @@
     ></script>
 
     <!-- Image compare utility. -->
-    <link
-      href="./image-compare.css"
-      rel="stylesheet"
-      type="text/css"
-    />
-    <script
-      src="./image-compare.js"
-      type="text/javascript"
-    ></script>
+    <link href="./image-compare.css" rel="stylesheet" type="text/css" />
+    <script src="./image-compare.js" type="text/javascript"></script>
 
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
@@ -109,11 +82,7 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/iconfont/tabler-icons.min.css"
     />
-    <link
-      href="style.css"
-      rel="stylesheet"
-      type="text/css"
-    />
+    <link href="style.css" rel="stylesheet" type="text/css" />
 
     <!-- KaTeX -->
     <link
@@ -182,15 +151,10 @@
         <a target="_blank">Weijia Zeng<sup>1</sup></a>
       </div>
       <div>
-        <a
-          href="https://sdbuchanan.com/"
-          target="_blank"
-          >Sam Buchanan</a
+        <a href="https://sdbuchanan.com/" target="_blank">Sam Buchanan</a
         ><sup>2</sup>
         <div style="width: 1.25em; display: inline-block"></div>
-        <a
-          href="https://people.eecs.berkeley.edu/~yima/"
-          target="_blank"
+        <a href="https://people.eecs.berkeley.edu/~yima/" target="_blank"
           >Yi Ma</a
         ><sup>1</sup>
       </div>
@@ -222,24 +186,18 @@
         flex-wrap: wrap;
       "
     >
-      <a
-        href="https://github.com/brentyi/tilted"
-        target="_blank"
-      >
+      <a href="https://github.com/brentyi/tilted" target="_blank">
         <button>
           <i class="ti ti-brand-github"></i>
           GitHub
         </button>
       </a>
-      <!-- TODO <a
-        href="https://arxiv.org/abs/2303.09553"
-        target="_blank"
-      >
+      <a href="https://arxiv.org/abs/2308.15461" target="_blank">
         <button>
           <i class="ti ti-article"></i>
           arXiv
         </button>
-      </a> -->
+      </a>
       <script type="text/javascript">
         function toggleBibtex() {
           const $bibtex = $("#bibtex");
@@ -257,10 +215,7 @@
       </a>
     </div>
 
-    <section
-      id="bibtex"
-      style="display: none"
-    >
+    <section id="bibtex" style="display: none">
       <div style="height: 1em"></div>
       <div style="height: 1em"></div>
       <p>
@@ -305,17 +260,11 @@
     <div style="height: 1em"></div>
 
     <!-- Big figure -->
+    <img src="./assets/TILTED_method.svg" id="tilted-method" />
+    <img src="./assets/TILTED_method_narrow.svg" id="tilted-method-narrow" />
     <img
-      src="./assets/TILTED_method.svg"
-      id="tilted-method"
-    />
-    <img
-      src="./assets/TILTED_method_narrow.svg"
-      id="tilted-method-narrow"
-    />
-    <img
-      src="./assets/TILTED_method_verynarrow.svg"
-      id="tilted-method-verynarrow"
+      src="./assets/TILTED_method_very_narrow.svg"
+      id="tilted-method-very-narrow"
     />
     <div style="height: 1em"></div>
 
@@ -352,15 +301,6 @@
       <p>For radiance fields, it improves visual fidelity:</p>
       <div class="switcher">
         <div
-          data-switcher-label="Giannini Hall"
-          class="image-compare"
-          data-before-label="K-Planes"
-          data-after-label="K-Planes + TILTED"
-        >
-          <img src="./assets/tilted_giannini_rgb.jpg" />
-          <img src="./assets/aligned_giannini_rgb.jpg" />
-        </div>
-        <div
           data-switcher-label="Kitchen"
           class="image-compare"
           data-before-label="K-Planes"
@@ -368,6 +308,15 @@
         >
           <img src="./assets/tilted_kitchen_rgb.jpg" />
           <img src="./assets/aligned_kitchen_rgb.jpg" />
+        </div>
+        <div
+          data-switcher-label="Giannini Hall"
+          class="image-compare"
+          data-before-label="K-Planes"
+          data-after-label="K-Planes + TILTED"
+        >
+          <img src="./assets/tilted_giannini_rgb.jpg" />
+          <img src="./assets/aligned_giannini_rgb.jpg" />
         </div>
         <div
           data-switcher-label="Stump"
@@ -396,15 +345,6 @@
 
       <div class="switcher">
         <div
-          data-switcher-label="Giannini Hall"
-          class="image-compare"
-          data-before-label="K-Planes"
-          data-after-label="K-Planes + TILTED"
-        >
-          <img src="./assets/tilted_giannini_norm.jpg" />
-          <img src="./assets/aligned_giannini_norm.jpg" />
-        </div>
-        <div
           data-switcher-label="Kitchen"
           class="image-compare"
           data-before-label="K-Planes"
@@ -412,6 +352,15 @@
         >
           <img src="./assets/tilted_kitchen_norm.jpg" />
           <img src="./assets/aligned_kitchen_norm.jpg" />
+        </div>
+        <div
+          data-switcher-label="Giannini Hall"
+          class="image-compare"
+          data-before-label="K-Planes"
+          data-after-label="K-Planes + TILTED"
+        >
+          <img src="./assets/tilted_giannini_norm.jpg" />
+          <img src="./assets/aligned_giannini_norm.jpg" />
         </div>
         <div
           data-switcher-label="Stump"
@@ -439,15 +388,6 @@
       </p>
       <div class="switcher">
         <div
-          data-switcher-label="Giannini Hall"
-          class="image-compare"
-          data-before-label="K-Planes"
-          data-after-label="K-Planes + TILTED"
-        >
-          <img src="./assets/tilted_giannini_pca.jpg" />
-          <img src="./assets/aligned_giannini_pca.jpg" />
-        </div>
-        <div
           data-switcher-label="Kitchen"
           class="image-compare"
           data-before-label="K-Planes"
@@ -455,6 +395,15 @@
         >
           <img src="./assets/tilted_kitchen_pca.jpg" />
           <img src="./assets/aligned_kitchen_pca.jpg" />
+        </div>
+        <div
+          data-switcher-label="Giannini Hall"
+          class="image-compare"
+          data-before-label="K-Planes"
+          data-after-label="K-Planes + TILTED"
+        >
+          <img src="./assets/tilted_giannini_pca.jpg" />
+          <img src="./assets/aligned_giannini_pca.jpg" />
         </div>
         <div
           data-switcher-label="Stump"
