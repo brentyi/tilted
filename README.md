@@ -60,7 +60,7 @@ official instructions: https://github.com/google/jax#installation
 
 We've packaged dependencies into a `requirements.txt` file:
 
-```
+```sh
 pip install -r requirements.txt
 ```
 
@@ -71,7 +71,7 @@ We use Tensorboard for logging.
 After training, radiance fields can be interactively visualized. Helptext for
 the visualization script can be found via:
 
-```
+```sh
 python visualize_nerf.py --help
 ```
 
@@ -81,7 +81,7 @@ dataset
 
 This can be unzipped in `tilted/` and visualized via:
 
-```
+```sh
 # Checkpoints can be selected via the dropdown on the right.
 # The 'Reset Up Direction' button will also be when orbitting / panning!
 python visualize_nerf.py ./example_checkpoints
@@ -104,7 +104,7 @@ All NeRF datasets were downloaded using
 [nerfstudio](https://github.com/nerfstudio-project/nerfstudio)'s
 `ns-download-data` command:
 
-```
+```sh
 # Requires nerfstudio installation.
 ns-download-data blender
 ns-download-data nerfstudio all
@@ -117,7 +117,7 @@ Commands we used for training NeRF models in the paper can be found in
 
 Here are two examples, which should run at ~65 it/sec on an RTX 4090:
 
-```
+```sh
 # Train a model on a synthetic scene.
 python train_nerf.py blender-kplane-32c-axis-aligned --dataset-path {path_to_data}
 
@@ -129,8 +129,22 @@ The `--help` flag can also be passed in to print helptext.
 
 ## Notes
 
-This is research code, so parts of it may be chaotic. If you have questions or
-comments, please reach out!
+This is research code, so parts of it may be chaotic. We've put effort into refactor
+and cleanup before release, but there's always more work to do here! If you have
+questions or comments, please reach out.
+
+Some notes:
+- The global orientation can have a large impact on performance of baselines.
+  `--render-config.global-rotate-seed INT` can be set in `train_nerf.py` to try
+  a different global orientation; paper results sweep across `0`, `1`, and `2` for
+  each synthetic scene.
+- For speeding things up, the bottleneck training step count can be dropped
+  significantly without hurting performance. This is dictated by
+  `--bottleneck.optim.projection-decay-start`
+  and `--bottleneck.optim.projection-decay-steps`; bottleneck training stop
+  as soon as the projection LR hits 0.
+- Runtimes can vary significantly between machines. Our experiments were run using JAX
+  `0.4.9` and CUDA `11.8` on RTX 4090 GPUs.
 
 This material is based upon work supported by the National Science Foundation
 Graduate Research Fellowship Program under Grant DGE 2146752. YM acknowledges
