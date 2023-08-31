@@ -55,7 +55,7 @@ class RunConfig:
     """Configuration for a bottleneck phase, which helps initialize transformations."""
 
     exp_name: Optional[str] = None
-    outputs_dir: Path = Path("./outputs_nerf_vm_only")
+    outputs_dir: Path = Path("./outputs_nerf")
 
     def __post_init__(self) -> None:
         # Make sure the parameters make sense.

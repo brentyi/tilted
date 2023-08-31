@@ -1,6 +1,7 @@
 # TILTED
 
-**[Project page](https://brentyi.github.io/tilted/) &bull; [arXiv](https://arxiv.org/abs/2308.15461)**
+**[Project page](https://brentyi.github.io/tilted/) &bull;
+[arXiv](https://arxiv.org/abs/2308.15461)**
 
 Code release for our ICCV 2023 paper:
 
@@ -63,6 +64,37 @@ We've packaged dependencies into a `requirements.txt` file:
 pip install -r requirements.txt
 ```
 
+### Visualization
+
+We use Tensorboard for logging.
+
+After training, radiance fields can be interactively visualized. Helptext for
+the visualization script can be found via:
+
+```
+python visualize_nerf.py --help
+```
+
+As a runnable example, we've uploaded trained checkpoints for the `Kitchen`
+dataset
+[here](https://drive.google.com/file/d/1oh3NM0KiJie3hxEL_97oiscPtXHDeAmf/view?usp=sharing).
+
+This can be unzipped in `tilted/` and visualized via:
+
+```
+# Checkpoints can be selected via the dropdown on the right.
+# The 'Reset Up Direction' button will also be when orbitting / panning!
+python visualize_nerf.py ./example_checkpoints
+```
+
+The visualization script supports RGB, PCA, and feature norm visualization:
+
+https://github.com/brentyi/tilted/assets/6992947/f8fd1dff-0a78-4f91-9973-bbfb98c3af0c
+
+The core viewer infrastructure has been moved into
+[nerfstudio-project/viser](https://github.com/nerfstudio-project/viser), which
+may be helpful if you're interested in visualization for other projects.
+
 ### Datasets
 
 Meshes for SDF experiments were downloaded from
@@ -94,23 +126,6 @@ python train_nerf.py nerfstudio-kplane-32c-axis-aligned --dataset-path {path_to_
 ```
 
 The `--help` flag can also be passed in to print helptext.
-
-### Visualization
-
-Trained radiance fields can be interactively visualized. Helptext for the
-visualization script can be found via:
-
-```
-python visualize_nerf.py --help
-```
-
-This supports RGB, PCA, and feature norm visualization:
-
-https://github.com/brentyi/tilted/assets/6992947/f8fd1dff-0a78-4f91-9973-bbfb98c3af0c
-
-The core viewer infrastructure has been moved into
-[nerfstudio-project/viser](https://github.com/nerfstudio-project/viser), which
-may be helpful if you're interested in visualization for other projects.
 
 ## Notes
 
