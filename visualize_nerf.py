@@ -6,9 +6,10 @@ import os
 import time
 
 import matplotlib as mpl
+import viser.transforms as tf
 from typing_extensions import assert_never
 
-import viser.transforms as tf
+from render_panel import populate_render_tab
 
 # Visualization is pretty lightweight, and only runs when we move the camera. Let's make
 # sure we can run multiple visualizers on the same GPU.
@@ -25,9 +26,9 @@ import jax_dataclasses as jdc
 import jaxlie
 import numpy as onp
 import tyro
+import viser
 from jax import numpy as jnp
 
-import viser
 from tilted.core.factored_grid import Learnable3DProjectersBase
 from tilted.nerf.cameras import Camera, Rays3D
 from tilted.nerf.render import viz_dist
@@ -64,6 +65,9 @@ class ClientRenderState:
 
     last_update_timestamp: float
 
+    sharded_train_state: Optional[TrainState]
+    devices: List[jax.Device]
+
     @staticmethod
     def setup(
         client: viser.ClientHandle,
@@ -83,6 +87,8 @@ class ClientRenderState:
             render_hw=(0, 0),
             rendered_chunks=[],
             last_update_timestamp=0.0,
+            sharded_train_state=None,
+            devices=[],
         )
         return out
 
@@ -93,8 +99,13 @@ class ClientRenderState:
         self.ray_queue = []
         self.rendered_chunks = []
 
-    def step(self, sharded_train_state: TrainState, devices: List[jax.Device]) -> None:
+    def step(self) -> None:
         camera = self.client.camera
+        sharded_train_state = self.sharded_train_state
+        devices = self.devices
+
+        if sharded_train_state is None:
+            return
 
         # How many rays to render.
         stage_ray_counts = (4096 * 8, 4096 * 64, 4096 * 256)
@@ -175,45 +186,7 @@ class ClientRenderState:
                 assert rendered_rays.shape[0] >= self.render_hw[0] * self.render_hw[1]
 
                 # Trim padding.
-                rendered_rays = rendered_rays[: self.render_hw[0] * self.render_hw[1]]
-                image = rendered_rays.reshape((*self.render_hw, -1))
-
-                # Color mapping for distance and norm maps.
-                if self.mode == "dist":
-                    assert image.shape[-1] == 1
-                    image = image.squeeze(axis=-1)
-                    assert image.shape == self.render_hw
-                    image = viz_dist(image, self.cmap)
-
-                if self.mode == "transform_feature_norm":
-                    image = image - image.min()
-                    image /= image.max()
-                    image = image[
-                        ...,
-                        onp.argsort(
-                            -onp.linalg.norm(
-                                image.reshape((-1, image.shape[-1])), axis=0
-                            )
-                        )[self.transform_viz_index % image.shape[-1]],
-                    ]
-                    image = (mpl.colormaps[self.cmap](image) * 255.0).astype(onp.uint8)
-
-                if self.mode == "feature_pca":
-                    X = image.reshape((self.render_hw[0] * self.render_hw[1], -1))
-                    X = X - onp.mean(X, axis=0, keepdims=True) # type: ignore
-                    eigenvalues, eigenvectors = onp.linalg.eigh(onp.cov(X.T))
-                    ind = onp.argsort(-eigenvalues)[:3]
-                    top_3 = eigenvectors[:, ind]
-                    assert top_3.shape == (X.shape[-1], 3)
-
-                    image = X @ top_3
-                    image = image / onp.sqrt(eigenvalues[ind[0]]) / 3.0
-                    image = onp.clip(image + 0.5, 0.0, 1.0)
-                    # image = image[
-                    #     ..., onp.argsort(onp.mean(image, axis=0, keepdims=True))
-                    # ]
-                    image = (image * 255.0).astype(onp.uint8)
-                    image = image.reshape((*self.render_hw, 3))
+                image = self.image_from_rendered_rays(rendered_rays, *self.render_hw)
 
                 # Send the image along.
                 self.client.set_background_image(image, "png")
@@ -230,6 +203,52 @@ class ClientRenderState:
             pass
         else:
             assert_never(self.state)
+
+    def image_from_rendered_rays(
+        self, rendered_rays: onp.ndarray, height: int, width: int
+    ) -> onp.ndarray:
+        assert rendered_rays.shape[0] >= height * width
+
+        # Trim padding.
+        rendered_rays = rendered_rays[: height * width]
+        image = rendered_rays.reshape((height, width, -1))
+
+        # Color mapping for distance and norm maps.
+        if self.mode == "dist":
+            assert image.shape[-1] == 1
+            image = image.squeeze(axis=-1)
+            assert image.shape == (height, width)
+            image = viz_dist(image, self.cmap)
+
+        if self.mode == "transform_feature_norm":
+            image = image - image.min()
+            image /= image.max()
+            image = image[
+                ...,
+                onp.argsort(
+                    -onp.linalg.norm(image.reshape((-1, image.shape[-1])), axis=0)
+                )[self.transform_viz_index % image.shape[-1]],
+            ]
+            image = (mpl.colormaps[self.cmap](image) * 255.0).astype(onp.uint8)
+
+        if self.mode == "feature_pca":
+            X = image.reshape((height * width, -1))
+            X = X - onp.mean(X, axis=0, keepdims=True)  # type: ignore
+            eigenvalues, eigenvectors = onp.linalg.eigh(onp.cov(X.T))
+            ind = onp.argsort(-eigenvalues)[:3]
+            top_3 = eigenvectors[:, ind]
+            assert top_3.shape == (X.shape[-1], 3)
+
+            image = X @ top_3
+            image = image / onp.sqrt(eigenvalues[ind[0]]) / 3.0
+            image = onp.clip(image + 0.5, 0.0, 1.0)
+            # image = image[
+            #     ..., onp.argsort(onp.mean(image, axis=0, keepdims=True))
+            # ]
+            image = (image * 255.0).astype(onp.uint8)
+            image = image.reshape((height, width, 3))
+
+        return image
 
     @staticmethod
     def slice_padded(a: onp.ndarray, start: int, chunk_size: int) -> onp.ndarray:
@@ -255,6 +274,65 @@ class ClientRenderState:
         assert out.shape[0] == chunk_size
         return out
 
+    def render_one_image(
+        self, T_world_camera: tf.SE3, height: int, width: int, fov: float
+    ) -> onp.ndarray:
+        # Get flattened rays.
+        total_rays = width * height
+        rays_wrt_world = jax.tree_map(
+            lambda a: onp.array(a.reshape((total_rays, *a.shape[2:]))),
+            get_camera(
+                T_world_camera.rotation().wxyz,
+                T_world_camera.translation(),
+                width,
+                height,
+                fov,
+            ).pixel_rays_wrt_world(camera_index=0),
+        )
+
+        devices = self.devices
+        sharded_train_state = self.sharded_train_state
+
+        ray_queue = []
+        start = 0
+        chunk_size = 2048 * len(devices)
+        while start < total_rays:
+            ray_batch = jax.tree_map(
+                lambda a: self.slice_padded(a, start=start, chunk_size=chunk_size),
+                rays_wrt_world,
+            )
+            ray_batch = jax.tree_map(
+                lambda a: jax.device_put_sharded(
+                    list(
+                        a.reshape(
+                            (len(devices), a.shape[0] // len(devices), *a.shape[1:])
+                        )
+                    ),
+                    devices,
+                ),
+                ray_batch,
+            )
+            ray_queue.append(ray_batch)
+            start += chunk_size
+
+        rendered_chunks = []
+
+        while len(ray_queue) > 0:
+            ray_batch = ray_queue.pop()
+            rendered_chunks.append(
+                jax.pmap(
+                    TrainState.render_rays,
+                    static_broadcasted_argnums=(2, 3),
+                )(
+                    sharded_train_state,
+                    ray_batch,
+                    True,
+                    "features" if self.mode == "feature_pca" else self.mode,
+                ).reshape((ray_batch.origins.shape[0] * ray_batch.origins.shape[1], -1))
+            )
+        rendered_rays = onp.concatenate(rendered_chunks[::-1], axis=0)
+        return self.image_from_rendered_rays(rendered_rays, height, width)
+
 
 def main(experiment_dir: pathlib.Path, /, port: int = 8080) -> None:
     server = viser.ViserServer(port=port)
@@ -272,6 +350,24 @@ def main(experiment_dir: pathlib.Path, /, port: int = 8080) -> None:
 
     @server.on_client_connect
     def _(client: viser.ClientHandle) -> None:
+        tab_group = client.add_gui_tab_group()
+
+        main_tab = tab_group.add_tab("Main")
+        render_tab = tab_group.add_tab("Render")
+
+        gui_status = client.add_gui_text("Status", initial_value="", disabled=True)
+        render_state = ClientRenderState.setup(
+            client, mode="rgb", cmap="hot", gui_status=gui_status
+        )
+        render_states[client.client_id] = render_state
+
+        # Make render tab.
+        with render_tab:
+            populate_render_tab(server, client, render_state.render_one_image)
+
+        # Put everything else into the main tab.
+        main_tab.__enter__()
+
         @client.camera.on_update
         def _(_: viser.CameraHandle) -> None:
             """When the client camera updates..."""
@@ -303,11 +399,6 @@ def main(experiment_dir: pathlib.Path, /, port: int = 8080) -> None:
                 with other_handle.atomic():
                     other_handle.camera.wxyz = wxyz
                     other_handle.camera.position = position
-
-        gui_status = client.add_gui_text("Status", initial_value="", disabled=True)
-        render_states[client.client_id] = ClientRenderState.setup(
-            client, mode="rgb", cmap="hot", gui_status=gui_status
-        )
 
         gui_reset_up = client.add_gui_button("Reset Up Direction")
         gui_experiment_filter = client.add_gui_text("Experiment contains", "")
@@ -418,6 +509,10 @@ def main(experiment_dir: pathlib.Path, /, port: int = 8080) -> None:
                 del train_state
 
                 sharded_train_states[client.client_id] = sharded_train_state
+                render_states[
+                    client.client_id
+                ].sharded_train_state = sharded_train_state
+                render_states[client.client_id].devices = devices
                 render_states[client.client_id].reset()
 
                 nonlocal gui_transform_index
@@ -459,7 +554,7 @@ def main(experiment_dir: pathlib.Path, /, port: int = 8080) -> None:
 
             with train_state_lock:
                 assert sharded_train_states[id] is not None
-                render_state.step(sharded_train_states[id], devices)
+                render_state.step()
 
         time.sleep(1e-2)
 
