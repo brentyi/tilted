@@ -39,10 +39,9 @@ p {
 }
 
 button {
-  /* background-color: #4c50af; [> Green <] */
-  background-color: #fff; /* Green */
+  background: #fff;
   border-radius: 0.5em;
-  border: 1px solid #333;
+  border: 1.5px solid #333;
   padding: 0.5em 2em;
   text-align: center;
   text-decoration: none;
